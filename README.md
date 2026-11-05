@@ -1,106 +1,85 @@
 # Advanced Packet Sniffer
 
-A Python GUI application that captures and analyzes network traffic in real-time, displaying packet details including source/destination IPs, protocols, ports, and payloads to help understand how data flows through networks.
+![Python](https://img.shields.io/badge/Python-3.7+-blue?style=flat-square)
+![Scapy](https://img.shields.io/badge/Scapy-2.5+-green?style=flat-square)
+![GUI](https://img.shields.io/badge/GUI-Tkinter-lightgrey?style=flat-square)
+
+A Python GUI application that captures and analyzes network traffic in real time. It shows packet details (source and destination IPs, protocols, ports, payloads) to help understand how data flows through a network.
+
+> **Authorized use only.** Capture traffic only on networks you own or have explicit permission to monitor.
 
 ## Features
 
 - Real-time packet capture on any network interface
-- Live statistics dashboard showing protocol breakdown
-- Color-coded protocol display for easy identification
-- Advanced filtering by protocol, IP address, or port number
-- Detailed packet inspection with three views: protocol layers, hex dump, and ASCII payload
-- Multi-protocol support: TCP, UDP, ICMP, ARP, DNS, and HTTP
-- PCAP export for analysis in other tools like Wireshark
+- Live statistics dashboard with a protocol breakdown
+- Color-coded protocol display
+- Filtering by protocol, IP address or port, applied live without stopping the capture
+- Packet inspection with three views: protocol layers, hex dump and ASCII payload
+- Multi-protocol support: TCP, UDP, ICMP, ARP, DNS and HTTP
+- PCAP export for analysis in Wireshark or other tools
 
 ## Requirements
 
 - Python 3.7 or higher
-- Administrator/Root privileges for packet capture
-
-### Dependencies
-
-```bash
-scapy
-tkinter
-```
+- [Scapy](https://scapy.net/)
+- Tkinter (ships with Python; on Debian/Ubuntu install `python3-tk`)
+- Administrator/root privileges for packet capture (plus [Npcap](https://npcap.com/) on Windows)
 
 ## Installation
 
-Clone the repository:
 ```bash
-git clone https://github.com/Touhoustic/CodeAlpha-AdvancedPacketSniffer
-```
+git clone https://github.com/Touhoustic/CodeAlpha_AdvancedPacketSniffer.git
+cd CodeAlpha_AdvancedPacketSniffer
+pip install -r requirements.txt
 
-Install dependencies:
-```bash
-pip install scapy
-```
-
-For Linux users:
-```bash
+# Linux only, if Tkinter is missing:
 sudo apt-get install python3-tk
 ```
 
 ## Usage
 
-Run with elevated privileges:
+Run with elevated privileges.
 
-Linux/Mac:
+Linux/macOS:
 ```bash
 sudo python3 packet_sniffer_aug.py
 ```
 
-Windows (as Administrator):
+Windows (terminal opened as Administrator):
 ```bash
 python packet_sniffer_aug.py
 ```
 
-### Basic Workflow
+### Workflow
 
-1. Select the network interface from the dropdown menu
-2. Click "Start Capture" to begin monitoring
-3. Use filters to narrow down specific traffic (optional)
-4. Click on any packet to view detailed information
-5. Save the capture as a .pcap file for later analysis
-6. Click "Stop Capture" when finished
+1. Select the network interface from the dropdown
+2. Click **Start Capture**
+3. Optionally narrow the view with filters
+4. Click any packet to inspect its layers, hex dump and ASCII payload
+5. Save the capture as a `.pcap` file for later analysis
+6. Click **Stop Capture** when finished
 
-## Supported Protocols
+## Supported protocols
 
-- **TCP** - Full header analysis with flag breakdown
-- **UDP** - Port and length information
-- **ICMP** - Type and code identification
-- **ARP** - Address resolution requests and replies
-- **DNS** - Query and response detection
-- **HTTP** - Basic request/response parsing
+| Protocol | Analysis |
+|---|---|
+| TCP | Header analysis with flag breakdown |
+| UDP | Ports and length |
+| ICMP | Type and code identification |
+| ARP | Requests and replies |
+| DNS | Query and response detection |
+| HTTP | Basic request/response parsing |
 
-## Technical Details
+## How it works
 
-The application uses Scapy for packet capture and manipulation, with a Tkinter-based GUI for display. Packet capture runs in a separate thread to prevent UI blocking. All captured packets are stored in memory and can be exported to standard PCAP format.
+Scapy handles capture and dissection, and a Tkinter GUI displays the results. Capture runs in a separate thread so the interface stays responsive. Each packet is analyzed layer by layer (Ethernet, network, transport, application) and kept in memory until exported to PCAP.
 
-### Filtering
+## Limitations
 
-Filters can be applied dynamically without stopping the capture. The application supports:
-- Protocol filtering (TCP, UDP, ICMP, ARP, DNS, HTTP)
-- IP address filtering (matches source or destination)
-- Port number filtering (searches in packet info)
+- Encrypted payloads (HTTPS, SSH) appear as opaque binary data
+- Captured packets are stored in memory, so very long captures on busy networks use a lot of RAM
+- HTTP parsing is basic and does not reassemble TCP streams
 
-### Packet Analysis
+## Disclaimer
 
-Each packet is analyzed layer by layer:
-- Ethernet layer (MAC addresses)
-- Network layer (IP addresses, TTL, protocol)
-- Transport layer (ports, flags, sequence numbers)
-- Application layer (HTTP, DNS detection)
-- Raw payload extraction
-
-## Important Notes
-
-- Requires administrator or root privileges to capture packets
-- Only use on networks you own or have explicit permission to monitor
-- High traffic volumes may impact performance
-- Encrypted payloads will show as binary data
-
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+This tool is for learning and for troubleshooting networks you own or are authorized to monitor. Capturing traffic without permission may be illegal.
